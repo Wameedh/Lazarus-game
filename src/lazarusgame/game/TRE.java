@@ -24,30 +24,32 @@ import java.util.Timer;
 import static javax.imageio.ImageIO.read;
 
 /**
- * @author anthony-pc
+ * @author Wameedh Mohammed Ali
  */
 public class TRE extends JPanel implements Runnable {
+    int lazarusStrength = GameConstants.LAZARUS_STRENGTH;
+    int cardboardBoxStrength = GameConstants.CARDBOARD_BOX_STRENGTH;
+    int woodBoxStrength = GameConstants.WOOD_BOX_STRENGTH;
+    int metalBoxStrength = GameConstants.METAL_BOX_STRENGTH;
+    int stoneBoxStrength = GameConstants.STONE_BOX_STRENGTH;
 
     private boolean gameOver;
-
+    private SoundPlayer sp;
     private TimerTaskForBoxSpawning timerTaskForBoxSpawning;
     private Map map;
     private Lazarus lazarus;
     private int level = 1;
 
-    private Launcher lf;
+    private final Launcher lf;
 
 
     private BufferedImage lazarusImg;
-
     private BufferedImage cardboardImg;
     private BufferedImage woodBoxImg;
     private BufferedImage metalBoxImg;
     private BufferedImage stoneBoxImg;
     private BufferedImage powerButtonImg;
-
     private BufferedImage bg;
-
     private BufferedImage wall;
 
     private JFrame jf;
@@ -62,15 +64,16 @@ public class TRE extends JPanel implements Runnable {
             this.resetGame();
             Timer timer = new Timer();
             this.timerTaskForBoxSpawning = new TimerTaskForBoxSpawning(map, lazarus);
-            timer.schedule(timerTaskForBoxSpawning, 0, 2000);
+            timer.scheduleAtFixedRate(timerTaskForBoxSpawning, 0, 1500);
+            // timer.schedule(timerTaskForBoxSpawning, 0, 1500);
             while (!gameOver) {
                 this.repaint();   // redraw game
                 update();
                 Thread.sleep(12);
             }
             //this.resetGame();
-        } catch (InterruptedException ignored) {
-            System.out.println(ignored);
+        } catch (InterruptedException e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -85,7 +88,6 @@ public class TRE extends JPanel implements Runnable {
         map.gameRest();
         map.readMap(level);
         this.gameOver = false;
-
     }
 
     /**
@@ -118,19 +120,25 @@ public class TRE extends JPanel implements Runnable {
         }
 
         this.map = new Map(wall, cardboardImg, woodBoxImg, metalBoxImg, stoneBoxImg, powerButtonImg);
-        lazarus = new Lazarus(200, 200, lazarusImg, 0, map.getMap());
+        lazarus = new Lazarus(GameConstants.LAZARUS_RESPAWN_X, GameConstants.LAZARUS_RESPAWN_Y, lazarusImg, lazarusStrength, map.getMap());
 
         LazarusControl lazarusControl = new LazarusControl(lazarus, KeyEvent.VK_A, KeyEvent.VK_D);
 
         this.lf.getJf().addKeyListener(lazarusControl);
         map.readMap(level);
 
+        // Set music control
+        this.sp = new SoundPlayer(1, "backgroundMusic.wav");
+
 
     }
 
     private void update() {
-        map.moveBoxes();
         lazarus.update();
+        map.updateLazarusLocationOnTheMap(lazarus.getX(), lazarus.getY());
+        map.moveBoxes();
+        lazarus.checkIfLazarusDied(map.getLazarusStatus());
+        map.setLazarusStatus(false);
     }
 
     @Override
@@ -143,23 +151,21 @@ public class TRE extends JPanel implements Runnable {
         this.setBackground(Color.GRAY);
 
         g2.drawImage(this.bg, 0, 0, null);
-
         map.renderMap(g2);
         map.drawImage(g2);
 
-        if (timerTaskForBoxSpawning.getFirstBox() == 1) {
+        if (timerTaskForBoxSpawning.getFirstBox() == cardboardBoxStrength) {
             g2.drawImage(this.cardboardImg, 0, 520, null);
-        } else if (timerTaskForBoxSpawning.getFirstBox() == 2) {
+        } else if (timerTaskForBoxSpawning.getFirstBox() == woodBoxStrength) {
             g2.drawImage(this.woodBoxImg, 0, 520, null);
-        } else if (timerTaskForBoxSpawning.getFirstBox() == 3) {
+        } else if (timerTaskForBoxSpawning.getFirstBox() == metalBoxStrength) {
             g2.drawImage(this.metalBoxImg, 0, 520, null);
-        } else if (timerTaskForBoxSpawning.getFirstBox() == 4) {
+        } else if (timerTaskForBoxSpawning.getFirstBox() == stoneBoxStrength) {
             g2.drawImage(this.stoneBoxImg, 0, 520, null);
         }
 
         // Draw lazarus
         this.lazarus.drawLazarus(g2);
-
         // print lives and hp
         g2.setColor(Color.orange);
         g2.setFont(new Font("TimesRoman", Font.PLAIN, 20));
@@ -177,17 +183,7 @@ public class TRE extends JPanel implements Runnable {
         }
 
 
-        if (lazarus.getLives() == 0) {
-            g2.setColor(Color.BLACK);
-            g2.fillRect(0, 0, GameConstants.SCREEN_WIDTH, GameConstants.SCREEN_HEIGHT);
-            g2.setColor(Color.white);
-            g2.setFont(new Font("TimesRoman", Font.PLAIN, 50));
-            g2.drawString("YOU HAVE LOST!!", (GameConstants.SCREEN_WIDTH / 4), GameConstants.SCREEN_HEIGHT / 2);
-            this.gameOver = true;
-        }
-
         if (lazarus.getGameStatus() == GameConstants.GAME_OVER) {
-
             this.gameOver = true;
             timerTaskForBoxSpawning.cancel();
             this.lf.setFrame("end");

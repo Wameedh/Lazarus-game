@@ -28,4 +28,15 @@ public class GameConstants {
     public static final int LAZARUS_RESPAWN_X = 200;
     public static final int LAZARUS_RESPAWN_Y = 200;
 
+    /*
+    The strength of each object is represented by an integer
+     */
+    public static final int LAZARUS_STRENGTH = 1;
+    public static final int CARDBOARD_BOX_STRENGTH = 2;
+    public static final int WOOD_BOX_STRENGTH = 3;
+    public static final int METAL_BOX_STRENGTH = 4;
+    public static final int STONE_BOX_STRENGTH = 5;
+    public static final int POWER_BUTTON_BOX_STRENGTH = 6;
+    public static final int WALL_STRENGTH = 7;
+
 }

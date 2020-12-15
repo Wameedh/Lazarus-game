@@ -42,9 +42,6 @@ public class animateSquished extends Animation {
         return returnImage;
     }
 
-    public void updatePosition(Lazarus lazarus){
-
-
-    }
+    public void updatePosition(Lazarus lazarus){ }
 
 }

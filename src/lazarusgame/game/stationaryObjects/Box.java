@@ -23,4 +23,5 @@ public class Box extends Stationary {
         return getY() + GameConstants.BLOCK_SIZE;
     }
 
+
 }

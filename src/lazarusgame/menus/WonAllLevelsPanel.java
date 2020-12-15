@@ -14,7 +14,6 @@ import java.io.IOException;
 public class WonAllLevelsPanel extends JPanel {
     private BufferedImage menuBackground;
     private JButton exit;
-    private JTextPane message;
     private Launcher lf;
 
     public WonAllLevelsPanel(Launcher lf) {
@@ -29,13 +28,6 @@ public class WonAllLevelsPanel extends JPanel {
         this.setBackground(Color.BLACK);
         this.setLayout(null);
 
-        message = new JTextPane();
-        SimpleAttributeSet set = new SimpleAttributeSet();
-        StyleConstants.setFontSize(set, 20);
-        message.setText("Welcome to");
-        message.setBounds((GameConstants.START_MENU_SCREEN_WIDTH/2) - 75,(GameConstants.START_MENU_SCREEN_HEIGHT/2) - 50,175,50);
-
-
         exit = new JButton("Exit");
         exit.setFont(new Font("Courier New", Font.BOLD ,24));
         exit.setBounds((GameConstants.START_MENU_SCREEN_WIDTH/2) - 75,(GameConstants.START_MENU_SCREEN_HEIGHT/2) + 50,175,50);
@@ -43,8 +35,6 @@ public class WonAllLevelsPanel extends JPanel {
             this.lf.closeGame();
         }));
 
-
-        this.add(message);
         this.add(exit);
 
     }

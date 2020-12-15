@@ -6,6 +6,8 @@
 package lazarusgame.game.moveableObjects;
 
 
+import lazarusgame.game.SoundPlayer;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -16,7 +18,9 @@ import java.awt.event.KeyListener;
  */
 public class LazarusControl implements KeyListener {
 
-    private Lazarus lazarus;
+   // private AudioPlayer playMusic;
+    private final SoundPlayer sp;
+    private final Lazarus lazarus;
     private final int right;
     private final int left;
 
@@ -25,7 +29,8 @@ public class LazarusControl implements KeyListener {
         this.lazarus = lazarus;
         this.right = right;
         this.left = left;
-
+        //playMusic = new AudioPlayer( "resources/Move.wav");
+        this.sp = new SoundPlayer(2,"Move.wav");
     }
 
     @Override
@@ -38,9 +43,13 @@ public class LazarusControl implements KeyListener {
         int keyPressed = ke.getKeyCode();
 
         if (keyPressed == left) {
+            //playMusic.play();
+            sp.play();
             this.lazarus.toggleLeftPressed();
         }
         if (keyPressed == right) {
+            //playMusic.play();
+            sp.play();
             this.lazarus.toggleRightPressed();
         }
 

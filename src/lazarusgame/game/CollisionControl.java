@@ -15,6 +15,14 @@ import java.util.ArrayList;
 
 public class CollisionControl {
 
+    int lazarusStrength = GameConstants.LAZARUS_STRENGTH;
+    int wallStrength = GameConstants.WALL_STRENGTH;
+    int cardboardBoxStrength = GameConstants.CARDBOARD_BOX_STRENGTH;
+    int woodBoxStrength = GameConstants.WOOD_BOX_STRENGTH;
+    int metalBoxStrength = GameConstants.METAL_BOX_STRENGTH;
+    int stoneBoxStrength = GameConstants.STONE_BOX_STRENGTH;
+    int powerButtonStrength = GameConstants.POWER_BUTTON_BOX_STRENGTH;
+
     private ArrayList<ArrayList<Integer>> map;
 
     public CollisionControl(ArrayList<ArrayList<Integer>> map) {
@@ -31,12 +39,12 @@ public class CollisionControl {
 
     private boolean validateLazarusToWallCollision(int newX, int newY){
         int value = getMapping(newX, newY);
-        return value == 6;
+        return value == wallStrength;
     }
 
     public boolean validateLazarustoBoxesCollision(int newX, int newY){
         int value = getMapping(newX, newY);
-        return value == 1 || value == 2 || value == 3 || value == 4;
+        return value == cardboardBoxStrength || value == woodBoxStrength || value == metalBoxStrength || value == stoneBoxStrength;
     }
 
     /**
@@ -46,8 +54,7 @@ public class CollisionControl {
         int boxX = newX / GameConstants.BLOCK_SIZE;
         int boxY = newY / GameConstants.BLOCK_SIZE;
 
-        Integer value = map.get(boxY).get(boxX);
-        return value;
+        return map.get(boxY).get(boxX);
     }
 
     public boolean validateBoxToWallCollision(Box box) {
@@ -56,7 +63,7 @@ public class CollisionControl {
 
         int value = getMapping(newX, newY);
 
-        return value == 6;
+        return value == wallStrength;
     }
 
     public boolean validateBoxToBoxCollision(Box box) {
@@ -64,15 +71,18 @@ public class CollisionControl {
         int newY = box.getNextBoxDownPosition();
 
         int value = getMapping(newX, newY);
+        return value == cardboardBoxStrength || value == woodBoxStrength || value == metalBoxStrength || value == stoneBoxStrength;
+    }
+    public boolean validateBoxToLazarusCollision(Box box) {
+        int newX = box.getX();
+        int newY = box.getNextBoxDownPosition();
 
-        if(value == 1 || value == 2 || value == 3 || value == 4) {
-            return true;
-        }
-        return false;
+        int value = getMapping(newX, newY);
+        return value == lazarusStrength;
     }
 
     public boolean validateLazarusToStopCollision(int lazX, int lazY) {
         int value = getMapping(lazX, lazY);
-        return value == 5;
+        return value == powerButtonStrength;
     }
 }

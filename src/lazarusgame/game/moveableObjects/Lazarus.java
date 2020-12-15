@@ -3,6 +3,7 @@ package lazarusgame.game.moveableObjects;
 
 import lazarusgame.GameConstants;
 import lazarusgame.game.CollisionControl;
+import lazarusgame.game.SoundPlayer;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -14,10 +15,11 @@ import java.util.ArrayList;
 public class Lazarus extends Moveable {
 
     private int lives;
-
+    private final SoundPlayer squishedSP;
+    private final SoundPlayer wonSP;
     private Animation currentAnimation;
 
-    private CollisionControl collisionControl;
+    private final CollisionControl collisionControl;
 
     private boolean RightPressed, movingRight;
     private boolean LeftPressed, movingLeft;
@@ -26,7 +28,8 @@ public class Lazarus extends Moveable {
 
     public Lazarus(int x, int y, BufferedImage image, int strength, ArrayList<ArrayList<Integer>> map) {
         super(x, y, image, strength);
-
+        this.squishedSP = new SoundPlayer(2, "Squished.wav");
+        this.wonSP = new SoundPlayer(2, "Button.wav");
         this.lives = 2;
         this.collisionControl = new CollisionControl(map);
         this.gameRunningStatus = GameConstants.GAME_IS_RUNNING;
@@ -53,8 +56,12 @@ public class Lazarus extends Moveable {
 
     public void update() {
         handleMovement();
-        if (collisionControl.validateLazarustoBoxesCollision(getX(), getY())) {
+        checkIfLazarusWon();
+    }
 
+    public void checkIfLazarusDied(boolean status) {
+        if (status) {
+            this.squishedSP.play();
             currentAnimation = new animateSquished(getX(), getY());
             System.out.println("LAZARUS DIES!");
             this.lives--;
@@ -64,16 +71,14 @@ public class Lazarus extends Moveable {
                 setX(GameConstants.LAZARUS_RESPAWN_X);
                 setY(GameConstants.LAZARUS_RESPAWN_Y);
             }
-            return;
         }
-        checkIfWon();
-
     }
 
-    private void checkIfWon() {
+    private void checkIfLazarusWon() {
 
         if (collisionControl.validateLazarusToStopCollision(getX(), getY())) {
-            System.out.println("WON!!!!");
+            this.wonSP.play();
+            System.out.println("LAZARUS WON!!!!");
             this.gameRunningStatus = GameConstants.GAME_WON;
         }
 
