@@ -18,16 +18,14 @@ public class Lazarus extends Moveable {
     private final SoundPlayer squishedSP;
     private final SoundPlayer wonSP;
     private Animation currentAnimation;
-
     private final CollisionControl collisionControl;
-
     private boolean RightPressed, movingRight;
     private boolean LeftPressed, movingLeft;
     private int gameRunningStatus;
 
 
-    public Lazarus(int x, int y, BufferedImage image, int strength, ArrayList<ArrayList<Integer>> map) {
-        super(x, y, image, strength);
+    public Lazarus(int x, int y, BufferedImage image, ArrayList<ArrayList<Integer>> map) {
+        super(x, y, image);
         this.squishedSP = new SoundPlayer(2, "Squished.wav");
         this.wonSP = new SoundPlayer(2, "Button.wav");
         this.lives = 2;
@@ -62,8 +60,6 @@ public class Lazarus extends Moveable {
     public void checkIfLazarusDied(boolean status) {
         if (status) {
             this.squishedSP.play();
-            currentAnimation = new animateSquished(getX(), getY());
-            System.out.println("LAZARUS DIES!");
             this.lives--;
             if (this.lives == 0) {
                 this.gameRunningStatus = GameConstants.GAME_OVER;
@@ -78,7 +74,6 @@ public class Lazarus extends Moveable {
 
         if (collisionControl.validateLazarusToStopCollision(getX(), getY())) {
             this.wonSP.play();
-            System.out.println("LAZARUS WON!!!!");
             this.gameRunningStatus = GameConstants.GAME_WON;
         }
 
@@ -152,10 +147,6 @@ public class Lazarus extends Moveable {
         this.gameRunningStatus = status;
     }
 
-    /******************************
-     GETTERS
-     *****************************/
-
     public int getLives() {
         return lives;
     }
@@ -173,15 +164,13 @@ public class Lazarus extends Moveable {
                 if (collisionControl.validateLazarustoBoxesCollision(getX(), getY())) {
                     LeftPressed = false;
                     RightPressed = false;
-
                 }
                 g2.drawImage(image, getX(), getY(), GameConstants.BLOCK_SIZE, GameConstants.BLOCK_SIZE, null);
 
             }
 
         } else {
-            Image image = Toolkit.getDefaultToolkit().getImage("resources/lazarus/Lazarus_stand.png");
-            g2.drawImage(image, getX(), getY(), GameConstants.BLOCK_SIZE, GameConstants.BLOCK_SIZE, null);
+            g2.drawImage(getImage(), getX(), getY(), GameConstants.BLOCK_SIZE, GameConstants.BLOCK_SIZE, null);
 
         }
     }

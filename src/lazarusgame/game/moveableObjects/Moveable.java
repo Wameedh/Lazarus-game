@@ -1,7 +1,5 @@
 package lazarusgame.game.moveableObjects;
 
-
-import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
@@ -12,15 +10,13 @@ public abstract class Moveable {
 
     private int x;
     private int y;
-    private int strength;
 
     private BufferedImage image;
 
-    public Moveable(int x, int y, BufferedImage image, int strength) {
+    public Moveable(int x, int y, BufferedImage image) {
         this.x = x;
         this.y = y;
         this.image = image;
-        this.strength = strength;
     }
 
 

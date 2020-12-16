@@ -35,7 +35,6 @@ public class animateLeft extends Animation {
         Image returnImage = aniLeftImage[index];
         index++;
 
-
         return returnImage;
     }
 

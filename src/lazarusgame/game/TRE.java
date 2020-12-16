@@ -52,7 +52,6 @@ public class TRE extends JPanel implements Runnable {
     private BufferedImage bg;
     private BufferedImage wall;
 
-    private JFrame jf;
 
     public TRE(Launcher lf) {
         this.lf = lf;
@@ -120,7 +119,7 @@ public class TRE extends JPanel implements Runnable {
         }
 
         this.map = new Map(wall, cardboardImg, woodBoxImg, metalBoxImg, stoneBoxImg, powerButtonImg);
-        lazarus = new Lazarus(GameConstants.LAZARUS_RESPAWN_X, GameConstants.LAZARUS_RESPAWN_Y, lazarusImg, lazarusStrength, map.getMap());
+        lazarus = new Lazarus(GameConstants.LAZARUS_RESPAWN_X, GameConstants.LAZARUS_RESPAWN_Y, lazarusImg, map.getMap());
 
         LazarusControl lazarusControl = new LazarusControl(lazarus, KeyEvent.VK_A, KeyEvent.VK_D);
 
@@ -145,14 +144,12 @@ public class TRE extends JPanel implements Runnable {
     public void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         super.paintComponent(g2);
-        map.mapUpdate();
-
-        // Set the background and draw the map
+        // Set the background
         this.setBackground(Color.GRAY);
-
         g2.drawImage(this.bg, 0, 0, null);
+
+        map.mapUpdate();
         map.renderMap(g2);
-        map.drawImage(g2);
 
         if (timerTaskForBoxSpawning.getFirstBox() == cardboardBoxStrength) {
             g2.drawImage(this.cardboardImg, 0, 520, null);
@@ -163,14 +160,14 @@ public class TRE extends JPanel implements Runnable {
         } else if (timerTaskForBoxSpawning.getFirstBox() == stoneBoxStrength) {
             g2.drawImage(this.stoneBoxImg, 0, 520, null);
         }
+        map.drawImage(g2);
 
         // Draw lazarus
         this.lazarus.drawLazarus(g2);
-        // print lives and hp
+        // print lives
         g2.setColor(Color.orange);
         g2.setFont(new Font("TimesRoman", Font.PLAIN, 20));
         g2.drawString("LIVES:", 15, 35);
-
         for (int i = 0; i < lazarus.getLives(); i++) {
 
             if (i == 0) {
